@@ -24,9 +24,31 @@ class Paciente:
     def asignarServicio(self,s):
         self.__servicio = s 
         
+    def __str__(self):
+        return f"""
+    -------------------------------------------------------------------------------------------------------
+    Paciente: {self.__nombre}, Cedula: {self.__cedula}, Genero: {self.__genero}, Servicio: {self.__servicio} 
+    -------------------------------------------------------------------------------------------------------"""
+        
 class Sistema:    
     def __init__(self):
         self.__lista_pacientes = [] 
+        
+        # Lista de pacientes predeterminados (cada paciente es un diccionario)
+        pacientes_iniciales = [
+            {"nombre": "Ana Pérez", "cedula": 1001234567, "genero": "Femenino", "servicio": "Cardiología"},
+            {"nombre": "Carlos Gómez", "cedula": 2002345678, "genero": "Masculino", "servicio": "Pediatría"},
+            {"nombre": "María Rodríguez", "cedula": 3003456789, "genero": "Femenino", "servicio": "Oncología"}
+        ]
+        
+        # Convertimos cada diccionario en un objeto Paciente
+        for paciente_data in pacientes_iniciales:
+            pac = Paciente()
+            pac.asignarNombre(paciente_data["nombre"])
+            pac.asignarCedula(paciente_data["cedula"])
+            pac.asignarGenero(paciente_data["genero"])
+            pac.asignarServicio(paciente_data["servicio"])
+            self.__lista_pacientes.append(pac)
         
     def verificarPaciente(self,cedula):
         for p in self.__lista_pacientes:
@@ -46,6 +68,15 @@ class Sistema:
             if c == p.verCedula():
                 return p #si encuentro el paciente lo retorno
             
+    def buscarPacientesPorNombre(self, nom_buscar):
+        contador = 0
+        for p in self.__lista_pacientes:
+            if p.verNombre().lower().startswith(nom_buscar.lower()):
+                contador += 1                
+                print(p)        
+        if contador == 0:
+            print(f"No se encontró ningún paciente con el nombre *{nom_buscar}*")
+    
     def verNumeroPacientes(self):
         print("En el sistema hay: " + str(len(self.__lista_pacientes)) + " pacientes") 
 
@@ -54,7 +85,7 @@ def main():
     #probemos lo que llevamos programado
     while True:
         #TAREA HACER EL MENU
-        opcion = int(input("\nIngrese \n0 para salir, \n1 para ingresar nuevo paciente, \n2 ver Paciente\n\t--> ")) 
+        opcion = int(input("\nIngrese \n0 para salir, \n1 para ingresar nuevo paciente, \n2 ver Paciente \n3 Buscar paciente por nombre \n\t--> ")) 
         
         if opcion == 1:
             #ingreso pacientes
@@ -91,6 +122,12 @@ def main():
                 print("Servicio: " + p.verServicio()) 
             else:
                 print("No existe un paciente con esa cedula") 
+                
+        elif opcion == 3:
+            nom = input("Ingrese el nombre del paciente a buscar: \n>>>")
+            sis.buscarPacientesPorNombre(nom)
+        
+
         elif opcion !=0:
             continue 
         else:
